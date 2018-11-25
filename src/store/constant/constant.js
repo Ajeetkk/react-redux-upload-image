@@ -1,6 +1,7 @@
 const actionTypes = {
     CHANGEUSERNAME:'CHANGEUSERNAME',
-    LOGINSUCCESS:'LOGINSUCCESS'
+    LOGINSUCCESS:'LOGINSUCCESS',
+    USERNAME:'USERNAME'
 
 }
 export default actionTypes;

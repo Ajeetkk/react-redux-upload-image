@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Carousel, Grid, Row, Col, Button, Thumbnail, Image, ProgressBar } from 'react-bootstrap';
 import { BrowserRouter as Router, Switch, Route,Redirect, Link } from 'react-router-dom';
 import axios from 'axios';
+import {connect} from 'react-redux';
 class UploadImages extends Component{
    
   constructor(props, context) {
@@ -17,7 +18,18 @@ class UploadImages extends Component{
   }
 
   
-  componentWillMount (){
+  componentDidMount (){
+    // alert("componentDidMount "+this.props.selectImage)
+    let data = JSON.parse(this.props.selectImage);
+// alert("selectImage"+data);
+// alert("length"+data.length);
+let dataLength = data.length
+this.setState({progress :100 })
+  data.map((row, i) => 
+    {
+        //alert( row);
+    
+  
     let that = this;
     //  const headersValues = {
     //     'Content-Type': 'application/json',
@@ -32,7 +44,7 @@ class UploadImages extends Component{
     {
       "type": "Doc ID - Front",
       "name": "test.png",
-      "content": "base64"
+      "content": row
   } ,
     { headers: { Authorization: AuthStr } }).then(response => {
             // If request is good...
@@ -43,11 +55,14 @@ class UploadImages extends Component{
             // alert(response.data[2].type);
              that.setState({progress :100 })
              that.refs.successLink.click();
+            //  dataLength--;
           })
           .catch((error) => {
             console.log('error 3 ' + error);
           });
-        }
+        })
+
+}
 
     render(){
       if (this.state.progress==100) {
@@ -87,4 +102,17 @@ class UploadImages extends Component{
         );
     }
 }
-export default UploadImages;
+
+
+function mapStateToProps(state){
+  return({
+       
+        selectImage: state.SelectImageReducer.selectImage
+  })
+}
+
+function mapDispatchToProps(dispatch){
+ 
+    }
+
+export default connect(mapStateToProps,mapDispatchToProps)(UploadImages);
