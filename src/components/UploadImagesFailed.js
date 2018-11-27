@@ -5,8 +5,9 @@ import axios from 'axios';
 import {connect} from 'react-redux';
 import './css/LoginCss.css';
 import {Helmet} from 'react-helmet';
+import UploadImages from './UploadImages';
 
-class ImageList extends Component{
+class UploadImagesFailed extends Component{
     count = 0;
   constructor(props, context) {
     super(props, context);
@@ -15,7 +16,7 @@ class ImageList extends Component{
     this.state = {
     productimage:  [],
     selectImage: [],
-    file:null,
+    file:'',
     imageSelectedSuccess:false
   
     };
@@ -110,7 +111,7 @@ onChangeFile(e) {
   onImageList(){
      //alert(JSON.stringify(this.state.selectImage));
    
-    this.props.imageList(JSON.stringify(this.state.selectImage));
+    this.props.imageList(this.props.selectImage);
     this.setState({
       imageSelectedSuccess:true
     })
@@ -119,7 +120,13 @@ onChangeFile(e) {
 
 
     render(){
-        // const { index, direction } = this.state;
+       // const { index, direction } = this.state; 
+       //alert(this.props.selectImage)
+   //alert(this.props.selectImage)
+       let data = JSON.parse(this.props.selectImage)
+     //  alert(data[0].type)
+       //let data = this.props.selectImage && JSON.parse(this.props.selectImage) 
+      
 
         if (this.state.imageSelectedSuccess) {
           return <Redirect push to="/UploadImages" />;
@@ -135,6 +142,7 @@ onChangeFile(e) {
         <Grid>
           
           <br />
+          
           {/* Design for md and lg */}
           {
             // alert("imagelist first name:"+this.props.User)
@@ -160,7 +168,7 @@ onChangeFile(e) {
             */}
             <input type="file" id="file" accept="image/*" ref="fileUploader" onChange={this.onChangeFile.bind(this)} style={{display: "none"}}/>
 
-     {this.state.productimage.map((row, i) =>
+     {data.map((row, i) =>
        <ul style={{listStyle: "none"}}>
            <li style={{    marginLeft: '-12%'}}>
           <h5 style={{color:'#19eef1'}}>{row.type}</h5>
@@ -168,28 +176,43 @@ onChangeFile(e) {
 
        
            {
-          this.state.file ? 
-          <div>
-            <input type="file"  id={this.count++} accept="image/*" ref={"fileUploader"+i} onChange={this.onReloadChangeFile.bind(this, i)} style={{display: "none"}}/>
+          // this.state.file ? 
+          // <div>
+          //   <input type="file"  id={this.count++} accept="image/*" ref={"fileUploader"+i} onChange={this.onReloadChangeFile.bind(this, i)} style={{display: "none"}}/>
 
-            <Button onClick={this.reloadHandleClick.bind(this, i)} style={{position:'absolute', zIndex: '3', background:'black'}}>
-               <img src={require('../resources/reload.png')} responsive/>
-           </Button>
-           <ButtonGroup vertical block>
-            <Button style={{border:'0px', background:'#f3f2f2'}}>
-              <img style={{padding:'50px', paddingBottom:'0px', width: '309px'}} ref={"selectImage"+i} src={this.state.selectImage[i]||require('../resources/primary.png')} responsive/>
-            </Button>
-           </ButtonGroup>
-           </div>
-            :
+          //   <Button onClick={this.reloadHandleClick.bind(this, i)} style={{position:'absolute', zIndex: '3', background:'black'}}>
+          //      <img src={require('../resources/reload.png')} responsive/>
+          //  </Button>
+          //  <ButtonGroup vertical block>
+          //   <Button style={{border:'0px', background:'#f3f2f2'}}>
+          //     <img style={{padding:'50px', paddingBottom:'0px', width: '309px'}} ref={"selectImage"+i} src={data[i].image||require('../resources/primary.png')} responsive/>
+            
+          //   </Button>
+          //  </ButtonGroup>
+          //  </div>
+          //   :
             <div>
+              
+               { data[i].uploaded?
+                  <Button style={{position:'absolute', zIndex: '3', background:'green'}}>
+                  <img src={require('../resources/ok.png')} responsive/>
+                </Button>
+                :
+                  <Button style={{position:'absolute', zIndex: '3', background:'red'}}>
+                  <img src={require('../resources/warn.png')} responsive/>
+                </Button>
+                }
+              }
+              
               <ButtonGroup vertical block>
 
-                 <Button onClick={this.handleClick} style={{border:'0px', background:'#f3f2f2'}}>
+                 <Button style={{border:'0px', background:'#f3f2f2'}}>
           
-                  <img style={{padding:'50px', paddingBottom:'0px'}} src={require('../resources/primary.png')} responsive/>
-                <h6 style={{paddingBottom:'10px', paddingTop:'20px', color:'#ada5a3'}}>Press to add a photo of document</h6>
+                  <img style={{padding:'50px', paddingBottom:'0px', width: '309px'}} src={data[i].image || require('../resources/primary.png')} responsive/>
+                <h6 style={{paddingBottom:'10px', paddingTop:'20px', color:'#ada5a3'}}>Press to add a photo of document ++ + {data[i].uploaded.toString()}</h6>
+                <h5></h5> 
                 </Button>
+                
               </ButtonGroup>
             
             </div>
@@ -229,26 +252,26 @@ onChangeFile(e) {
             {/* <input type="file" id="file" accept="image/*" ref="fileUploader" onChange={this.onChangeFile.bind(this)} style={{display: "none"}}/> */}
             <input type="file" id="file" accept="image/*" ref="fileUploader" onChange={this.onChangeFile.bind(this)} style={{display: "none"}}/>
 
-     {this.state.productimage.map((row, i) =>
+     {data.map((row, i) =>
         <ul style={{listStyle: "none"}}>
            <li>
           <h5 style={{color:'#19eef1'}}>{row.type}</h5>
          
            {
-          this.state.file ? 
-          <div>
-            <input type="file"  id={this.count++} accept="image/*" ref={"fileUploader"+i} onChange={this.onReloadChangeFile.bind(this, i)} style={{display: "none"}}/>
+          // this.state.file ? 
+          // <div>
+          //   <input type="file"  id={this.count++} accept="image/*" ref={"fileUploader"+i} onChange={this.onReloadChangeFile.bind(this, i)} style={{display: "none"}}/>
 
-            <Button onClick={this.reloadHandleClick.bind(this, i)} style={{position:'absolute', zIndex: '3', background:'black'}}>
-               <img src={require('../resources/reload.png')} responsive/>
-           </Button>
-           <ButtonGroup vertical block>
-            <Button style={{border:'0px', background:'#f3f2f2'}}>
-              <img style={{padding:'50px', paddingBottom:'0px', width: '192px'}} ref="selectImage" src={this.state.file} responsive/>
-            </Button>
-           </ButtonGroup>
-           </div>
-            :
+          //   <Button onClick={this.reloadHandleClick.bind(this, i)} style={{position:'absolute', zIndex: '3', background:'black'}}>
+          //      <img src={require('../resources/reload.png')} responsive/>
+          //  </Button>
+          //  <ButtonGroup vertical block>
+          //   <Button style={{border:'0px', background:'#f3f2f2'}}>
+          //     <img style={{padding:'50px', paddingBottom:'0px', width: '192px'}} ref="selectImage" src={this.state.file} responsive/>
+          //   </Button>
+          //  </ButtonGroup>
+          //  </div>
+          //   :
             <div>
               <ButtonGroup vertical block>
 
@@ -293,26 +316,26 @@ onChangeFile(e) {
             {/* <input type="file" id="file" accept="image/*" ref="fileUploader" onChange={this.onChangeFile.bind(this)} style={{display: "none"}}/> */}
             <input type="file" id="file" accept="image/*" ref="fileUploader" onChange={this.onChangeFile.bind(this)} style={{display: "none"}}/>
 
-     {this.state.productimage.map((row, i) =>
+     {data.map((row, i) =>
         <ul style={{listStyle: "none"}}>
            <li>
           <h5 style={{color:'#19eef1'}}>{row.type}</h5>
          
            {
-          this.state.file ? 
-          <div>
-            <input type="file"  id={this.count++} accept="image/*" ref={"fileUploader"+i} onChange={this.onReloadChangeFile.bind(this, i)} style={{display: "none"}}/>
+          // this.state.file ? 
+          // <div>
+          //   <input type="file"  id={this.count++} accept="image/*" ref={"fileUploader"+i} onChange={this.onReloadChangeFile.bind(this, i)} style={{display: "none"}}/>
 
-            <Button onClick={this.handleClick} style={{position:'absolute', zIndex: '3', background:'black'}}>
-               <img src={require('../resources/reload.png')} responsive/>
-           </Button>
-           <ButtonGroup vertical block>
-            <Button style={{border:'0px', background:'#f3f2f2'}}>
-              <img style={{padding:'50px', paddingBottom:'0px', width: '167px'}} ref="selectImage" src={this.state.file} responsive/>
-            </Button>
-           </ButtonGroup>
-           </div>
-            :
+          //   <Button onClick={this.handleClick} style={{position:'absolute', zIndex: '3', background:'black'}}>
+          //      <img src={require('../resources/reload.png')} responsive/>
+          //  </Button>
+          //  <ButtonGroup vertical block>
+          //   <Button style={{border:'0px', background:'#f3f2f2'}}>
+          //     <img style={{padding:'50px', paddingBottom:'0px', width: '167px'}} ref="selectImage" src={this.state.file} responsive/>
+          //   </Button>
+          //  </ButtonGroup>
+          //  </div>
+          //   :
             <div>
               <ButtonGroup vertical block>
 
@@ -338,7 +361,7 @@ onChangeFile(e) {
           {/* Button xs lg md */}
          {/* {this.state.selectImage.length >=this.count && this.count !== 0? 
            */}
-   {this.state.selectImage.length == this.state.productimage.length? 
+   {data.length == this.state.productimage.length? 
         
           <Row xsHidden>
             <Col sm={4} xsHidden></Col>
@@ -348,7 +371,7 @@ onChangeFile(e) {
               <Col sm={11}>
               <ButtonGroup vertical block>
                {/* <Button onClick={this.onImageList}><Link to='/UploadImages'>Upload File</Link></Button> */}
-               <Button onClick={this.onImageList.bind(this)}>Upload File</Button>
+               <Button onClick={this.onImageList.bind(this)}>ReUpload File</Button>
           
                </ButtonGroup>
               </Col>
@@ -359,14 +382,14 @@ onChangeFile(e) {
           </Row>
          : null}
           {/* button xs */}
-{this.state.selectImage.length == this.state.productimage.length? 
+{this.props.selectImage.length == this.state.productimage.length? 
           <Row>
             
             <Col xs={1} smHidden mdHidden lgHidden></Col>
             <Col xs={10} smHidden mdHidden lgHidden>
             <ButtonGroup vertical block>
                {/* <Button><Link to='/UploadImages'>Upload File</Link></Button> */}
-               <Button onClick={this.onImageList.bind(this)}>Upload File</Button>
+               <Button onClick={this.onImageList.bind(this)}>ReUpload File</Button>
           
                </ButtonGroup>
             </Col>
@@ -414,4 +437,4 @@ function mapDispatchToProps(dispatch){
   })
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(ImageList);
+export default connect(mapStateToProps,mapDispatchToProps)(UploadImagesFailed);

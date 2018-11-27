@@ -10,6 +10,7 @@ class UploadImages extends Component{
    
     this.state = {
       progress: 0,
+      success : false,
     file:null
   
     };
@@ -24,49 +25,79 @@ class UploadImages extends Component{
 // alert("selectImage"+data);
 // alert("length"+data.length);
 let dataLength = data.length
-this.setState({progress :100 })
+// this.setState({progress :100 })
   data.map((row, i) => 
     {
-        //alert( row);
+        //alert( i+" "+row.type+" "+row.name+" "+row.image );
     
   
     let that = this;
-    //  const headersValues = {
-    //     'Content-Type': 'application/json',
-    //     'Accept': 'application/json',
-    //     'Authorization': 'Bearer '+localStorage.getItem('token')
-    // }
-    // alert("headers data Image List:"+headersValues.Authorization);
+    let typedata = row.type;
+    let namedata = row.name;
+    let imagedata = row.image;
+
 
     const AuthStr = 'Bearer '.concat(localStorage.getItem('token'));
-    // alert("AuthStr::-"+AuthStr);
+    //  alert("AuthStr::-"+AuthStr);
     axios.post('http://wizzio-dev1.westeurope.cloudapp.azure.com:4500/bin/mvc.do/onboarding/773/document',
     {
-      "type": "Doc ID - Front",
-      "name": "test.png",
-      "content": row
-  } ,
+      "type": typedata || '',
+      "name": namedata || '',
+      "content": imagedata || ''
+      // "type": "Doc ID - Front",
+      // "name": "test.png",
+      // "content":""
+     } ,
     { headers: { Authorization: AuthStr } }).then(response => {
             // If request is good...
             console.log(response.data);
-            // alert(JSON.stringify(response.data));
+            //alert(JSON.stringify(response.data));
             // alert(response.data[0].name);
             // alert(response.data[1].type);
             // alert(response.data[2].type);
-             that.setState({progress :100 })
-             that.refs.successLink.click();
-            //  dataLength--;
+            let itemArray = JSON.parse(that.props.selectImage)
+            let item = {}
+            item.name = itemArray[i].name
+            item.type = itemArray[i].type
+            item.image = itemArray[i].image
+            item.uploaded = true
+            itemArray[i] = item
+            //alert(JSON.stringify(itemArray))
+            that.props.imageList(JSON.stringify(itemArray));
+             that.setState({progress :100/dataLength })
+             that.setState({success : true })
+            //  that.refs.successLink.click();
+              dataLength--;
           })
           .catch((error) => {
             console.log('error 3 ' + error);
+             //alert(error)
+            // alert(typedata)
+            // alert(namedata)
+            // alert(imagedata)
+            let itemArray = JSON.parse(that.props.selectImage)
+            let item = {}
+            item.name = itemArray[i].name
+            item.type = itemArray[i].type
+            item.image = itemArray[i].image
+            item.uploaded = false
+            itemArray[i] = item
+            //alert(JSON.stringify(itemArray))
+            that.props.imageList(JSON.stringify(itemArray));
+            that.setState({progress :100/dataLength })
+            that.setState({success : false })
+              dataLength--;
           });
         })
 
 }
 
     render(){
-      if (this.state.progress==100) {
-            return <Redirect push to="/Success" />;
+      if (this.state.progress==100 && this.state.success) {
+            return <Redirect push to="/UploadImagesFailed" />;
+          }
+     if (this.state.progress==100 && !this.state.success){
+        return <Redirect push to="/UploadImagesFailed" />;
           }
         return(
         
@@ -112,7 +143,17 @@ function mapStateToProps(state){
 }
 
 function mapDispatchToProps(dispatch){
- 
+ return({
+
+  imageList: (selectimagevalues)=>{
+    //  alert("mapDispatchToProps  "+selectimagevalues)
+    dispatch({
+        type:'SELECTIMAGE',
+        payload:selectimagevalues
+    })
+}
+
+ });
     }
 
 export default connect(mapStateToProps,mapDispatchToProps)(UploadImages);

@@ -6,7 +6,7 @@ const INITIAL_STATE ={
 export default (states = INITIAL_STATE, action)=>{
     switch(action.type){
         case actiontypes.SELECTIMAGE:
-        // alert("select image reducer");
+        //  alert("select image reducer" + action.payload.length);
         return({
             ...states,
             selectImage:action.payload         

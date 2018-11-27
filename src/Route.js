@@ -7,6 +7,7 @@ import UploadImages from './components/UploadImages';
 import Success from './components/Success';
 import history from './History'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import UploadImagesFailed from './components/UploadImagesFailed';
 
 
 class Routers extends Component{
@@ -17,6 +18,8 @@ class Routers extends Component{
                     <Route exact path="/" component={Login}> </Route>
                     <Route exact path="/ImageList" component={ImageList}> </Route>
                     <Route exact path="/UploadImages" component={UploadImages}> </Route>
+                    <Route exact path="/UploadImagesFailed" component={UploadImagesFailed}> </Route>
+                   
                     <Route exact path="/Success" component={Success}> </Route>
                     <Route exact path="/Home" component={Home}> </Route>
                     <Route exact path="/About" component={About}> </Route>
