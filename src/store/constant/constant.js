@@ -1,7 +1,4 @@
 const actionTypes = {
-    CHANGEUSERNAME:'CHANGEUSERNAME',
-    LOGINSUCCESS:'LOGINSUCCESS',
-    USERNAME:'USERNAME'
-
-}
+  USERNAME: "USERNAME"
+};
 export default actionTypes;

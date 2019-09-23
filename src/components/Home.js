@@ -1,71 +1,50 @@
-import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
-import { Button } from 'react-bootstrap';
-import {connect} from 'react-redux';
-import {changeState} from '../store/actions/action';
+import React, { Component } from "react";
+import { Button } from "react-bootstrap";
+import { connect } from "react-redux";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 class Home extends Component {
-  
-
   constructor(props) {
-		super(props);
-    this.state = {      
-      User:'',
-      Pass:''
+    super(props);
+    this.state = {
+      logout: 0
     };
-    
-    }
-  _changeState(){
-    this.props.changeStateToReducerOne(this.state.User);
-    this.setState({
-      User:this.state.User,
-      Pass:this.state.Pass
-     
-    })
   }
- 
-  _changeUserInput(event){
+  logOut() {
     this.setState({
-      User: event.target.value
-    })
+      logout: 1
+    });
   }
-  _changePassInput(event){
-    this.setState({
-        Pass: event.target.value
-    })
-  }
-
   render() {
+    if (this.state.logout === 1) {
+      return <Redirect push to="/" />;
+    }
     return (
-  
-         <div>
-            <h1>Hello Home {this.props.User} &nbsp; {this.props.Pass}</h1>
-
-
-                <Button onClick={this._changeState.bind(this)}>Change State</Button>
-                <input type='text' value={this.state.User} onChange={this._changeUserInput.bind(this)}></input>
-                <input type='text' value={this.state.Pass} onChange={this._changePassInput.bind(this)}></input>
-               
-                <Link to='/About'>Go to About</Link>
-         </div>
+      <div style={{ textAlign: "center" }}>
+        <Button onClick={this.logOut.bind(this)} style={{ float: "right" }}>
+          Logout
+        </Button>
+        <h1>
+          {" "}
+          Home Page <br />
+        </h1>
+        <h3>
+          User Name: <b>{this.props.User}</b>
+        </h3>
+      </div>
     );
   }
 }
 
-
-function mapStateToProps(state){
-  return({
-        User: state.rootReducer.User,
-        Pass: state.rootReducer.Pass
-  })
+function mapStateToProps(state) {
+  // alert("homemapStateToProps:" + state.LoginReducer.User);
+  return {
+    User: state.LoginReducer.User
+  };
 }
 
-function mapDispatchToProps(dispatch){
-  return({
-      changeStateToReducerOne: (updatedUserName)=>{
-          dispatch(changeState(updatedUserName))
-      }
-  })
-
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(Home);
+export default connect(mapStateToProps)(Home);
